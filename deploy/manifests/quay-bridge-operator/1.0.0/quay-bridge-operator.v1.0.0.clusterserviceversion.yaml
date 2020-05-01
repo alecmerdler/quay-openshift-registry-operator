@@ -181,6 +181,22 @@ spec:
 
     _Note: Until the operator is running, new requests for builds will fail since the webserver the MutatingWebhookConfiguration invokes is not available and a proper is response is required in order for the object to be persisted in etcd._
   displayName: Quay Bridge Operator
+  webhookdefinitions:
+    - name: quay-bridge-operator-webhook
+      type: MutatingAdmissionWebhook
+      deploymentName: quay-bridge-operator
+      containerPort: 8443
+      rules:
+        - operations: 
+            - create
+          apiGroups: 
+            - build.openshift.io
+          apiVersions: 
+            - v1
+          resources:
+            - builds
+      failurePolicy: Fail
+      webhookPath: /admissionwebhook
   install:
     spec:
       deployments:
